@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinkerCAD 3Dモデリング体験 | 創造工学科 オープンキャンパス2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans JP & Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        en: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        event: {
+                            dark: '#0f172a', // Slate 900
+                            card: '#1e293b', // Slate 800
+                            primary: '#0ea5e9', // Sky 500
+                            secondary: '#3b82f6', // Blue 500
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+        }
+        
+        /* テキストグラデーション */
+        .text-gradient {
+            background: linear-gradient(135deg, #a5b4fc 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* アニメーション */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* タイムラインの装飾 */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -24px;
+            width: 2px;
+            background: linear-gradient(to bottom, #6366f1, #d946ef);
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+        
+        /* 浮かぶ装飾エフェクト */
+        .floating-blob {
+            animation: blob 10s infinite alternate;
+        }
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-event-secondary selection:text-white">
+
+    <!-- ======================================================== -->
+    <!-- ▼▼▼ 簡単設定エリア：画像やURLはこちらで変更できます ▼▼▼ -->
+    <!-- ======================================================== -->
+    <script>
+        const EVENT_CONFIG = {
+            // 1. TinkerCADの起動URL
+            tinkercadUrl: "https://www.tinkercad.com/",
+            
+            // 2. 一番上のメイン画像（ヒーロー背景）のURL
+            // （プレースホルダー画像内の文字を改行する場合は %0A を入れます）
+            heroBackgroundImage: "https://placehold.co/1920x1080/1e293b/0ea5e9?text=Creative%0ATechnology%0AEngineering",
+            
+            // 3. イベント内容セクションに表示される画像のURL
+            //    ローカルの画像を使う場合は "./assets/my-photo.jpg" のように指定します
+            aboutImage: "https://placehold.co/800x600/1e293b/0ea5e9?text=TinkerCAD+Workspace"
+        };
+    </script>
+    <!-- ======================================================== -->
+    <!-- ▲▲▲ 簡単設定エリア ここまで ▲▲▲ -->
+    <!-- ======================================================== -->
+
+    <!-- Navigation -->
+    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-event-dark/80 backdrop-blur-md shadow-sm border-b border-white/10 transition-opacity duration-300" id="nav-bg"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex items-center justify-between h-20">
+                <!-- Event Title -->
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold text-white tracking-wider">創造工学科　学科イベント</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-gray-300 hover:text-white font-medium transition">イベント内容</a>
+                    <a href="#features" class="text-gray-300 hover:text-white font-medium transition">3つのポイント</a>
+                    <a href="#program" class="text-gray-300 hover:text-white font-medium transition">プログラム</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-event-card absolute w-full left-0 top-20 border-t border-white/10 shadow-2xl">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+                <a href="#about" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">イベント概要</a>
+                <a href="#features" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">3つのポイント</a>
+                <a href="#program" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">プログラム</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero-section" class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-cover bg-center bg-no-repeat bg-fixed">
+        <!-- Background Effects -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-event-primary rounded-full mix-blend-screen filter blur-[120px] opacity-40 floating-blob"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-event-secondary rounded-full mix-blend-screen filter blur-[120px] opacity-40 floating-blob" style="animation-delay: -5s;"></div>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+            <div class="max-w-4xl mx-auto text-center fade-in-up">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-sm font-bold mb-8">
+                    <span class="w-2 h-2 rounded-full bg-event-secondary animate-pulse"></span>
+                    TinkerCAD WORKSHOP
+                </div>
+                
+                <!-- Main Title -->
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
+                    頭の中のアイデアを、<br />
+                    3Dモデリングで<br />
+                    <span class="text-gradient">カタチにしよう。</span>
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto font-medium">
+                    TinkerCADを使って3Dモデル作成<br class="hidden sm:block">
+                    〜初心者でも簡単！ブラウザで本格モノづくり〜
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex justify-center items-center">
+                    <a href="#about" class="w-full sm:w-auto bg-white/10 border border-white/20 text-white hover:bg-white/20 px-8 py-4 rounded-full font-bold text-lg transition duration-300 flex items-center justify-center gap-2">
+                        イベント内容を見る <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <!-- Image side -->
+                <div class="w-full lg:w-1/2 relative fade-in-up">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-event-primary to-event-secondary rounded-2xl opacity-30 blur-xl"></div>
+                    <img id="about-image" src="" alt="ワークショップのイメージ" class="relative rounded-2xl border border-white/10 shadow-2xl w-full object-cover aspect-video">
+                </div>
+
+                <!-- Text side -->
+                <div class="w-full lg:w-1/2 fade-in-up" style="transition-delay: 0.2s;">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight">
+                        ブロック遊びの感覚で、<br>
+                        本格的な3Dデータを作る。
+                    </h2>
+                    <div class="w-16 h-1 bg-gradient-to-r from-event-primary to-event-secondary mb-8 rounded-full"></div>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        「3D CAD」と聞くとプロ向けの難しいツールを想像するかもしれません。しかし、今回使用する「TinkerCAD（ティンカーキャド）」は、基本の図形を組み合わせたり削ったりするだけで、誰でも直感的に3Dモデルを作れるツールです。
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-8">
+                        この学科イベントでは、弓削商船のPC教室で実際にTinkerCADを操作し、簡単な3Dモデルを作成します。画面の中でモノを「設計」する楽しさと、それが現実の立体物になるワクワクを体験してください。
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-event-secondary mt-1 text-lg"></i>
+                            <span class="text-gray-200 font-medium">直感的なブラウザCADツールを無料で体験できる</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-event-secondary mt-1 text-lg"></i>
+                            <span class="text-gray-200 font-medium">3Dプリンターで出力する仕組みが学べる</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-check-circle text-event-secondary mt-1 text-lg"></i>
+                            <span class="text-gray-200 font-medium">創造工学科の学びの雰囲気がよくわかる</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-[#0a101d] relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">FEATURES</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">このイベントの<span class="text-gradient">3つのポイント</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-event-card border border-white/5 rounded-2xl p-8 hover:-translate-y-2 transition duration-300 hover:shadow-[0_10px_30px_rgba(14,165,233,0.2)] fade-in-up" style="transition-delay: 0.1s;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-primary/20 to-event-primary/5 border border-event-primary/20 flex items-center justify-center text-3xl text-event-primary mb-6">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">直感的なブラウザ操作</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        特別なソフトは必要ありません！インターネットの画面上で、積み木を組み合わせるように楽しく簡単に3Dデータを作ることができます。
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-event-card border border-white/5 rounded-2xl p-8 hover:-translate-y-2 transition duration-300 hover:shadow-[0_10px_30px_rgba(59,130,246,0.2)] fade-in-up" style="transition-delay: 0.2s;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-secondary/20 to-event-secondary/5 border border-event-secondary/20 flex items-center justify-center text-3xl text-event-secondary mb-6">
+                        <i class="fa-solid fa-print"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">3Dプリンターとの連携</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        作った3Dデータがどうやって本物の立体になるのか説明します！学校には最新の3Dプリンターがたくさんあり、先輩たちも大会や研究でバリバリ使っています。
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-event-card border border-white/5 rounded-2xl p-8 hover:-translate-y-2 transition duration-300 hover:shadow-[0_10px_30px_rgba(14,165,233,0.2)] fade-in-up" style="transition-delay: 0.3s;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400/20 to-blue-400/5 border border-blue-400/20 flex items-center justify-center text-3xl text-blue-400 mb-6">
+                        <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">在学生が徹底サポート</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        パソコンの操作が苦手でも大丈夫！優しい先輩たちがしっかりサポートしてくれます。弓削商船での楽しい学校生活や、気になる寮生活のリアルな話も聞けちゃいます！
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program / Timetable -->
+    <section id="program" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <div class="text-center mb-16 fade-in-up">
+                <span class="font-en tracking-[0.2em] text-event-secondary font-bold text-sm">PROGRAM</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-6">ワークショップの流れ</h2>
+                
+                <div class="inline-flex items-center justify-center gap-3 bg-event-card border border-white/10 rounded-full px-6 py-2 shadow-lg">
+                    <div class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-event-primary opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-event-primary"></span>
+                    </div>
+                    <span class="text-gray-300 font-medium tracking-wide text-sm">所要時間</span>
+                    <span class="font-en font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-event-primary to-event-secondary">40 MIN</span>
+                </div>
+            </div>
+
+            <div class="relative fade-in-up">
+                <!-- Item 1: 5min -->
+                <div class="timeline-item relative pl-12 mb-10 group">
+                    <div class="timeline-line"></div>
+                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-event-primary z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="bg-event-card border border-white/10 rounded-xl p-6 hover:border-event-primary/50 transition-colors duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                            <div class="flex items-center">
+                                <span class="font-en text-3xl font-black text-event-primary/80 mr-3">01</span>
+                                <div class="h-6 w-px bg-white/20 mr-3 hidden sm:block"></div>
+                                <div class="inline-flex items-center gap-1.5 bg-event-primary/10 border border-event-primary/30 px-3 py-1 rounded">
+                                    <i class="fa-solid fa-stopwatch text-event-primary text-sm"></i>
+                                    <span class="font-en font-bold text-event-primary text-sm tracking-wider">5 MIN</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white">オープニング</h4>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed mb-5">まずは先生と先輩からご挨拶！今日使う魔法のツール「TinkerCAD（ティンカーキャド）」をパソコンで開いて、準備を整えよう。</p>
+                        
+                        <!-- TinkerCAD起動ボタン -->
+                        <a id="tinkercad-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-2.5 px-5 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg shadow-event-primary/25 border border-white/10">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                            TinkerCADを起動する
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Item 2: 15min -->
+                <div class="timeline-item relative pl-12 mb-10 group">
+                    <div class="timeline-line"></div>
+                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-indigo-400 z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="bg-event-card border border-white/10 rounded-xl p-6 hover:border-indigo-400/50 transition-colors duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                            <div class="flex items-center">
+                                <span class="font-en text-3xl font-black text-indigo-400/80 mr-3">02</span>
+                                <div class="h-6 w-px bg-white/20 mr-3 hidden sm:block"></div>
+                                <div class="inline-flex items-center gap-1.5 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded">
+                                    <i class="fa-solid fa-stopwatch text-indigo-400 text-sm"></i>
+                                    <span class="font-en font-bold text-indigo-400 text-sm tracking-wider">15 MIN</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white">みんなで基本操作の練習</h4>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">実際にパソコンをさわってみよう！先輩のお手本を見ながら、四角や丸などの図形を出したり、重ねたり、大きさを変えたりする練習をするよ。まるでデジタルな積み木遊びみたい！</p>
+                    </div>
+                </div>
+
+                <!-- Item 3: 15min -->
+                <div class="timeline-item relative pl-12 mb-10 group">
+                    <div class="timeline-line"></div>
+                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-event-secondary z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                    <div class="bg-event-card border border-white/10 rounded-xl p-6 hover:border-event-secondary/50 transition-colors duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                            <div class="flex items-center">
+                                <span class="font-en text-3xl font-black text-event-secondary/80 mr-3">03</span>
+                                <div class="h-6 w-px bg-white/20 mr-3 hidden sm:block"></div>
+                                <div class="inline-flex items-center gap-1.5 bg-event-secondary/10 border border-event-secondary/30 px-3 py-1 rounded">
+                                    <i class="fa-solid fa-stopwatch text-event-secondary text-sm"></i>
+                                    <span class="font-en font-bold text-event-secondary text-sm tracking-wider">15 MIN</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white">オリジナル作品を作ろう</h4>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">いよいよ本番！練習した操作を使って、自分の名前を入れたネームタグなど、好きな形のオリジナルアイテムを自由にデザインしてみよう。困った時は、すぐ隣にいる先輩が助けてくれるから安心してね！</p>
+                    </div>
+                </div>
+
+                <!-- Item 4: 5min -->
+                <div class="timeline-item relative pl-12 group">
+                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-gray-500 z-10 group-hover:scale-125 transition-transform duration-300 group-hover:border-gray-400"></div>
+                    <div class="bg-event-card border border-white/10 rounded-xl p-6 hover:border-gray-500/50 transition-colors duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                            <div class="flex items-center">
+                                <span class="font-en text-3xl font-black text-gray-400/80 mr-3">04</span>
+                                <div class="h-6 w-px bg-white/20 mr-3 hidden sm:block"></div>
+                                <div class="inline-flex items-center gap-1.5 bg-gray-500/10 border border-gray-500/30 px-3 py-1 rounded">
+                                    <i class="fa-solid fa-stopwatch text-gray-400 text-sm"></i>
+                                    <span class="font-en font-bold text-gray-400 text-sm tracking-wider">5 MIN</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white">3Dプリンター見学＆おわりに</h4>
+                        </div>
+                        <p class="text-gray-400 leading-relaxed">みんなが作ったデータが、どうやって本物の立体になるのか、最新の3Dプリンターが動く様子を見学しよう！弓削商船での学校生活や寮生活のことなど、先輩になんでも質問してみてね。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        // Scroll Animation (Fade in up)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Navbar & Mobile Menu Logic
+        const navBg = document.getElementById('nav-bg');
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const icon = btn.querySelector('i');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navBg.classList.replace('bg-event-dark/80', 'bg-event-dark');
+            } else {
+                navBg.classList.replace('bg-event-dark', 'bg-event-dark/80');
+            }
+        });
+
+        function toggleMenu() {
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        }
+
+        btn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+        // 設定エリアの値を各要素に反映する処理
+        document.addEventListener('DOMContentLoaded', () => {
+            // TinkerCAD URLの設定
+            const tinkercadLink = document.getElementById('tinkercad-link');
+            if (tinkercadLink) tinkercadLink.href = EVENT_CONFIG.tinkercadUrl;
+
+            // About画像の設定
+            const aboutImg = document.getElementById('about-image');
+            if (aboutImg) aboutImg.src = EVENT_CONFIG.aboutImage;
+
+            // Hero背景画像の設定
+            const heroSection = document.getElementById('hero-section');
+            if (heroSection) {
+                heroSection.style.backgroundImage = `linear-gradient(to right bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7)), url('${EVENT_CONFIG.heroBackgroundImage}')`;
+            }
+        });
+
+        // Trigger initial visibility check
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>
