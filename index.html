@@ -95,6 +95,9 @@
     <!-- ======================================================== -->
     <script>
         const EVENT_CONFIG = {
+            // 0. ブラウザのタブに表示されるタイトル
+            pageTitle: "TinkerCAD 3Dモデリング体験 | 創造工学科 オープンキャンパス2026",
+
             // 1. TinkerCADの起動URL
             tinkercadUrl: "https://www.tinkercad.com/",
             
@@ -166,8 +169,8 @@
                 <!-- Main Title -->
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
                     頭の中のアイデアを、<br />
-                    3Dモデリングで<br />
-                    <span class="text-gradient">カタチにしよう。</span>
+                    <span class="text-gradient">3Dモデリング</span>で<br />
+                    カタチにしよう。
                 </h1>
                 
                 <!-- Subtitle -->
@@ -279,15 +282,24 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
             <div class="text-center mb-16 fade-in-up">
                 <span class="font-en tracking-[0.2em] text-event-secondary font-bold text-sm">PROGRAM</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-6">ワークショップの流れ</h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-6">プログラム</h2>
                 
-                <div class="inline-flex items-center justify-center gap-3 bg-event-card border border-white/10 rounded-full px-6 py-2 shadow-lg">
-                    <div class="relative flex h-3 w-3">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-event-primary opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-event-primary"></span>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <!-- 所要時間バッジ -->
+                    <div class="inline-flex items-center justify-center gap-3 bg-event-card border border-white/10 rounded-full px-6 py-2.5 shadow-lg">
+                        <div class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-event-primary opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-event-primary"></span>
+                        </div>
+                        <span class="text-gray-300 font-medium tracking-wide text-sm">所要時間</span>
+                        <span class="font-en font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-event-primary to-event-secondary">40 MIN</span>
                     </div>
-                    <span class="text-gray-300 font-medium tracking-wide text-sm">所要時間</span>
-                    <span class="font-en font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-event-primary to-event-secondary">40 MIN</span>
+
+                    <!-- TinkerCAD起動ボタン -->
+                    <a id="tinkercad-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-2.5 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-event-primary/25 border border-white/10">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        TinkerCADを起動する
+                    </a>
                 </div>
             </div>
 
@@ -308,13 +320,7 @@
                             </div>
                             <h4 class="text-xl font-bold text-white">オープニング</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed mb-5">まずは先生と先輩からご挨拶！今日使う魔法のツール「TinkerCAD（ティンカーキャド）」をパソコンで開いて、準備を整えよう。</p>
-                        
-                        <!-- TinkerCAD起動ボタン -->
-                        <a id="tinkercad-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-2.5 px-5 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg shadow-event-primary/25 border border-white/10">
-                            <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
-                            TinkerCADを起動する
-                        </a>
+                        <p class="text-gray-400 leading-relaxed">まずは先生と先輩からご挨拶！今日使う魔法のツール「TinkerCAD（ティンカーキャド）」をパソコンで開いて、準備を整えよう。</p>
                     </div>
                 </div>
 
@@ -352,9 +358,9 @@
                                     <span class="font-en font-bold text-event-secondary text-sm tracking-wider">15 MIN</span>
                                 </div>
                             </div>
-                            <h4 class="text-xl font-bold text-white">オリジナル作品を作ろう</h4>
+                            <h4 class="text-xl font-bold text-white">物理演算「Sim Lab」を体験しよう</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed">いよいよ本番！練習した操作を使って、自分の名前を入れたネームタグなど、好きな形のオリジナルアイテムを自由にデザインしてみよう。困った時は、すぐ隣にいる先輩が助けてくれるから安心してね！</p>
+                        <p class="text-gray-400 leading-relaxed">TinkerCADの楽しい機能「Sim Lab（シムラボ）」に挑戦！事前に用意した「スカラーロボット」の3Dモデルを使い、キーボード操作でクレーンゲームにチャレンジしてみよう！</p>
                     </div>
                 </div>
 
@@ -371,9 +377,9 @@
                                     <span class="font-en font-bold text-gray-400 text-sm tracking-wider">5 MIN</span>
                                 </div>
                             </div>
-                            <h4 class="text-xl font-bold text-white">3Dプリンター見学＆おわりに</h4>
+                            <h4 class="text-xl font-bold text-white">3Dプリンタで出力するには＆おわりに</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed">みんなが作ったデータが、どうやって本物の立体になるのか、最新の3Dプリンターが動く様子を見学しよう！弓削商船での学校生活や寮生活のことなど、先輩になんでも質問してみてね。</p>
+                        <p class="text-gray-400 leading-relaxed">作ったデータがどうやって3Dプリントするのか、3Dプリンターで使用するファイルに変換してみよう！最後に、弓削商船での学校生活や寮生活について、先輩になんでも質問してみてね！</p>
                     </div>
                 </div>
             </div>
@@ -433,6 +439,11 @@
 
         // 設定エリアの値を各要素に反映する処理
         document.addEventListener('DOMContentLoaded', () => {
+            // ページタイトルの設定
+            if (EVENT_CONFIG.pageTitle) {
+                document.title = EVENT_CONFIG.pageTitle;
+            }
+
             // TinkerCAD URLの設定
             const tinkercadLink = document.getElementById('tinkercad-link');
             if (tinkercadLink) tinkercadLink.href = EVENT_CONFIG.tinkercadUrl;
