@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinkerCAD 3Dモデリング体験 | 創造工学科 オープンキャンパス2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        en: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        event: {
+                            dark: '#0f172a',
+                            deep: '#0a101d',
+                            card: '#1e293b',
+                            primary: '#0ea5e9',
+                            secondary: '#3b82f6',
+                            accent: '#d946ef',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #a5b4fc 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -28px;
+            width: 2px;
+            background: linear-gradient(to bottom, #0ea5e9, #d946ef);
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+
+        .dice-stage {
+            perspective: 900px;
+        }
+        .dice {
+            width: min(52vw, 260px);
+            height: min(52vw, 260px);
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-22deg) rotateY(34deg);
+            animation: dice-float 5s ease-in-out infinite alternate;
+        }
+        .dice-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(210,232,255,0.92));
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: inset -18px -20px 42px rgba(14, 165, 233, 0.15), inset 12px 12px 34px rgba(255,255,255,0.7);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 16%;
+            gap: 12%;
+        }
+        .dice-face.front { transform: translateZ(calc(min(52vw, 260px) / 2)); }
+        .dice-face.right { transform: rotateY(90deg) translateZ(calc(min(52vw, 260px) / 2)); }
+        .dice-face.top { transform: rotateX(90deg) translateZ(calc(min(52vw, 260px) / 2)); }
+        .pip {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 999px;
+            background: radial-gradient(circle at 35% 35%, #67e8f9, #0ea5e9 52%, #1d4ed8 100%);
+            box-shadow: inset 2px 2px 8px rgba(255,255,255,0.5), 0 6px 16px rgba(14,165,233,0.35);
+        }
+        .pos-1 { grid-column: 1; grid-row: 1; }
+        .pos-3 { grid-column: 3; grid-row: 1; }
+        .pos-5 { grid-column: 2; grid-row: 2; }
+        .pos-7 { grid-column: 1; grid-row: 3; }
+        .pos-9 { grid-column: 3; grid-row: 3; }
+        @keyframes dice-float {
+            from { transform: rotateX(-22deg) rotateY(28deg) translateY(0); }
+            to { transform: rotateX(-16deg) rotateY(44deg) translateY(-18px); }
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-event-secondary selection:text-white">
+    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-event-dark/80 backdrop-blur-md shadow-sm border-b border-white/10 transition-opacity duration-300" id="nav-bg"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex items-center justify-between h-20">
+                <a href="./index.html" class="text-lg sm:text-xl font-bold text-white tracking-wider hover:text-event-primary transition">創造工学科　学科イベント</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#rules" class="text-gray-300 hover:text-white font-medium transition">完成イメージ</a>
+                    <a href="#steps" class="text-gray-300 hover:text-white font-medium transition">作成ステップ</a>
+                    <a href="#tips" class="text-gray-300 hover:text-white font-medium transition">ヒント</a>
+                </nav>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none p-2" aria-label="メニューを開く">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-event-card absolute w-full left-0 top-20 border-t border-white/10 shadow-2xl">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+                <a href="#rules" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">完成イメージ</a>
+                <a href="#steps" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">作成ステップ</a>
+                <a href="#tips" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">ヒント</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-event-dark">
+            <div class="absolute inset-0 hero-grid opacity-60"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(14,165,233,0.34),transparent_32%),radial-gradient(circle_at_80%_35%,rgba(217,70,239,0.24),transparent_28%)]"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+                <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+                    <div class="fade-in-up">
+                        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-sm font-bold mb-8">
+                            <span class="w-2 h-2 rounded-full bg-event-primary animate-pulse"></span>
+                            TINKERCAD WORKSHOP
+                        </div>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
+                            Tinkercadで<br>
+                            <span class="text-gradient">サイコロ</span>を<br>
+                            作ろう！
+                        </h1>
+                        <p class="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl font-medium leading-relaxed">
+                            Web上でかんたんに3Dデザインができる「Tinkercad」を使って、オリジナルのサイコロを作ります。
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#steps" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-lg shadow-event-primary/25 border border-white/10">
+                                <i class="fa-solid fa-play"></i>
+                                手順を見る
+                            </a>
+                            <a href="#rules" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-full font-bold transition duration-300">
+                                <i class="fa-solid fa-dice"></i>
+                                ルールを確認
+                            </a>
+                        </div>
+                    </div>
+                    <div class="dice-stage min-h-[360px] flex items-center justify-center fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="dice" aria-hidden="true">
+                            <div class="dice-face front">
+                                <span class="pip pos-1"></span>
+                                <span class="pip pos-3"></span>
+                                <span class="pip pos-7"></span>
+                                <span class="pip pos-9"></span>
+                            </div>
+                            <div class="dice-face right">
+                                <span class="pip pos-1"></span>
+                                <span class="pip pos-3"></span>
+                                <span class="pip pos-5"></span>
+                                <span class="pip pos-7"></span>
+                                <span class="pip pos-9"></span>
+                            </div>
+                            <div class="dice-face top">
+                                <span class="pip pos-5"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="rules" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">GOAL & RULES</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">完成イメージと<span class="text-gradient">基本ルール</span></h2>
+                    <p class="text-gray-400 leading-relaxed">サイコロらしく見える形と、数字の配置ルールを先に確認しておきましょう。</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-primary/20 to-event-primary/5 border border-event-primary/20 flex items-center justify-center text-3xl text-event-primary mb-6">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">サイズ</h3>
+                        <p class="text-gray-400 leading-relaxed">完成目標は <span class="text-white font-bold">20mm × 20mm × 20mm</span> の立方体です。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-secondary/20 to-event-secondary/5 border border-event-secondary/20 flex items-center justify-center text-3xl text-event-secondary mb-6">
+                            <i class="fa-solid fa-arrows-left-right-to-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">向かい合う面</h3>
+                        <p class="text-gray-400 leading-relaxed">向かい合う面の合計は必ず <span class="text-white font-bold">7</span>。1の裏は6、2の裏は5、3の裏は4です。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-accent/20 to-event-accent/5 border border-event-accent/20 flex items-center justify-center text-3xl text-event-accent mb-6">
+                            <i class="fa-solid fa-circle-dot"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">目の作り方</h3>
+                        <p class="text-gray-400 leading-relaxed">サイコロの目は「穴」の球体を本体に少し埋め込み、グループ化してくり抜きます。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="steps" class="py-24 bg-event-deep relative z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+                <div class="text-center mb-16 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-secondary font-bold text-sm">WORKFLOW</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-6">作成ステップ</h2>
+                </div>
+
+                <div class="relative fade-in-up">
+                    <article class="timeline-item relative pl-12 mb-10 group">
+                        <div class="timeline-line"></div>
+                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-deep border-4 border-event-primary z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                        <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 hover:border-event-primary/50 transition-colors duration-300">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                                <span class="font-en text-3xl font-black text-event-primary/80">01</span>
+                                <h3 class="text-2xl font-bold text-white">サイコロの本体を作ろう</h3>
+                            </div>
+                            <ol class="space-y-4 text-gray-300 leading-relaxed list-decimal list-inside">
+                                <li>画面右側の「基本シェイプ」から下に行き、その他のシェイプにある「サイコロ」を作業平面へドラッグ＆ドロップします。</li>
+                                <li>立方体の角にある白い四角をクリックして、サイズを確認します。完成目標は20mm角です。</li>
+                            </ol>
+                            <div class="mt-6 bg-sky-500/10 border border-sky-400/20 rounded-xl p-4 flex gap-3">
+                                <i class="fa-solid fa-lightbulb text-event-primary mt-1"></i>
+                                <p class="text-gray-300 leading-relaxed">角を少し丸めたいときは、右上のインスペクタにある「半径」のスライダを1〜2くらいに動かすと、きれいなサイコロになります。</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-item relative pl-12 mb-10 group">
+                        <div class="timeline-line"></div>
+                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-deep border-4 border-indigo-400 z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                        <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 hover:border-indigo-400/50 transition-colors duration-300">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                                <span class="font-en text-3xl font-black text-indigo-400/80">02</span>
+                                <h3 class="text-2xl font-bold text-white">サイコロの目を準備しよう</h3>
+                            </div>
+                            <ol class="space-y-4 text-gray-300 leading-relaxed list-decimal list-inside">
+                                <li>右側のメニューから「穴」の球体を作業平面に置きます。</li>
+                                <li>球体のサイズを「縦15 / 横15 / 高さ15」に変更します。これがサイコロの目のベースになります。</li>
+                                <li>作った目を、キーボードの <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">D</kbd> で複製しておきます。</li>
+                            </ol>
+                        </div>
+                    </article>
+
+                    <article class="timeline-item relative pl-12 mb-10 group">
+                        <div class="timeline-line"></div>
+                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-deep border-4 border-event-secondary z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                        <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 hover:border-event-secondary/50 transition-colors duration-300">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                                <span class="font-en text-3xl font-black text-event-secondary/80">03</span>
+                                <h3 class="text-2xl font-bold text-white">本体に目を配置して削ろう</h3>
+                            </div>
+                            <p class="text-gray-400 leading-relaxed mb-6">ここでは、一番目立つ「1の目」を例に説明します。</p>
+                            <div class="grid md:grid-cols-2 gap-5">
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
+                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-pointer text-event-primary"></i>作業平面を移動</h4>
+                                    <p class="text-gray-400 leading-relaxed"><kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">W</kbd> キーを押し、立方体の上面をクリックします。上面が新しい基準面になります。</p>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
+                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-plus text-event-primary"></i>目を置く</h4>
+                                    <p class="text-gray-400 leading-relaxed">穴の球体を、立方体の上面の真ん中あたりへ移動させます。</p>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
+                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-align-center text-event-secondary"></i>中央に整列</h4>
+                                    <p class="text-gray-400 leading-relaxed">立方体と球体を両方選択し、「整列」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">L</kbd> キーを押します。縦横中央の黒い丸をクリックします。</p>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
+                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-down text-event-secondary"></i>少し埋め込む</h4>
+                                    <p class="text-gray-400 leading-relaxed">球体だけを選択し、黒い三角矢印を使って立方体の中に6mmほど沈み込ませます。</p>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-5 md:col-span-2">
+                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-object-group text-event-accent"></i>グループ化してくり抜く</h4>
+                                    <p class="text-gray-400 leading-relaxed">立方体と球体を両方選択し、「グループ化」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">G</kbd> を押します。穴が空いて「1の目」の完成です。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="timeline-item relative pl-12 group">
+                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-deep border-4 border-event-accent z-10 group-hover:scale-125 transition-transform duration-300"></div>
+                        <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 hover:border-event-accent/50 transition-colors duration-300">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                                <span class="font-en text-3xl font-black text-event-accent/80">04</span>
+                                <h3 class="text-2xl font-bold text-white">他の面も同じように作ろう</h3>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed">1の裏は6、2の裏は5、3の裏は4になるように、別の面へ作業平面を切り替えながら目を配置します。細かい並べ方は、時間をおいて前で説明します。</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">TIPS</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">2〜6の目を作るときのヒント</h2>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-primary/20 to-event-primary/5 border border-event-primary/20 flex items-center justify-center text-2xl text-event-primary mb-6">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">面を切り替える</h3>
+                        <p class="text-gray-400 leading-relaxed"><kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">W</kbd> キーを押してサイコロの別の側面をクリックすると、その面が新しい作業平面になります。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-secondary/20 to-event-secondary/5 border border-event-secondary/20 flex items-center justify-center text-2xl text-event-secondary mb-6">
+                            <i class="fa-solid fa-clone"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">斜めの目をまとめる</h3>
+                        <p class="text-gray-400 leading-relaxed">「2」や「3」の目は、穴の球体同士を先にグループ化して斜めに配置すると扱いやすくなります。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-accent/20 to-event-accent/5 border border-event-accent/20 flex items-center justify-center text-2xl text-event-accent mb-6">
+                            <i class="fa-solid fa-grip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">等間隔に並べる</h3>
+                        <p class="text-gray-400 leading-relaxed">「4」や「5」の目は、Gridのスナップ機能を使うと等間隔に並べやすくなります。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        const navBg = document.getElementById('nav-bg');
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const icon = btn.querySelector('i');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navBg.classList.replace('bg-event-dark/80', 'bg-event-dark');
+            } else {
+                navBg.classList.replace('bg-event-dark', 'bg-event-dark/80');
+            }
+        });
+
+        function toggleMenu() {
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        }
+
+        btn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>
