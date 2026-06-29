@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TinkerCAD 3Dモデリング体験 | 創造工学科 オープンキャンパス2026</title>
+    <title>オープンキャンパス︰サイコロの作成 | Tinkercadでサイコロを作ろう！</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -156,7 +156,9 @@
                             <span class="w-2 h-2 rounded-full bg-event-primary animate-pulse"></span>
                             TINKERCAD WORKSHOP
                         </div>
+                        <p class="font-bold text-event-primary mb-4 tracking-wide">オープンキャンパス︰サイコロの作成</p>
                         <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
+                            <span class="text-2xl md:text-3xl lg:text-4xl">【3Dモデリング体験】</span><br>
                             Tinkercadで<br>
                             <span class="text-gradient">サイコロ</span>を<br>
                             作ろう！
@@ -213,7 +215,7 @@
                             <i class="fa-solid fa-cube"></i>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-3">サイズ</h3>
-                        <p class="text-gray-400 leading-relaxed">完成目標は <span class="text-white font-bold">20mm × 20mm × 20mm</span> の立方体です。</p>
+                        <p class="text-gray-400 leading-relaxed">完成目標は <span class="text-white font-bold">60mm × 60mm × 60mm</span> の立方体です。</p>
                     </article>
 
                     <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.1s;">
@@ -229,7 +231,7 @@
                             <i class="fa-solid fa-circle-dot"></i>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-3">目の作り方</h3>
-                        <p class="text-gray-400 leading-relaxed">サイコロの目は「穴」の球体を本体に少し埋め込み、グループ化してくり抜きます。</p>
+                        <p class="text-gray-400 leading-relaxed">サイコロの目は「穴」の球体を本体に配置し、グループ化してくり抜きます。</p>
                     </article>
                 </div>
             </div>
@@ -253,12 +255,8 @@
                             </div>
                             <ol class="space-y-4 text-gray-300 leading-relaxed list-decimal list-inside">
                                 <li>画面右側の「基本シェイプ」から下に行き、その他のシェイプにある「サイコロ」を作業平面へドラッグ＆ドロップします。</li>
-                                <li>立方体の角にある白い四角をクリックして、サイズを確認します。完成目標は20mm角です。</li>
+                                <li>サイコロの角にある白い四角（ドット）をクリックして、サイズが「縦60 / 横60 / 高さ60」になっているか確認します（標準で20mmになっています）。</li>
                             </ol>
-                            <div class="mt-6 bg-sky-500/10 border border-sky-400/20 rounded-xl p-4 flex gap-3">
-                                <i class="fa-solid fa-lightbulb text-event-primary mt-1"></i>
-                                <p class="text-gray-300 leading-relaxed">角を少し丸めたいときは、右上のインスペクタにある「半径」のスライダを1〜2くらいに動かすと、きれいなサイコロになります。</p>
-                            </div>
                         </div>
                     </article>
 
@@ -271,9 +269,9 @@
                                 <h3 class="text-2xl font-bold text-white">サイコロの目を準備しよう</h3>
                             </div>
                             <ol class="space-y-4 text-gray-300 leading-relaxed list-decimal list-inside">
-                                <li>右側のメニューから「穴」の球体を作業平面に置きます。</li>
+                                <li>右側のメニューから「穴（グレーの縞模様の球体）」を作業平面に置きます。</li>
                                 <li>球体のサイズを「縦15 / 横15 / 高さ15」に変更します。これがサイコロの目のベースになります。</li>
-                                <li>作った目を、キーボードの <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">D</kbd> で複製しておきます。</li>
+                                <li>作った目を、キーボードの <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">D</kbd> でたくさん複製（コピー）しておきましょう。</li>
                             </ol>
                         </div>
                     </article>
@@ -287,39 +285,12 @@
                                 <h3 class="text-2xl font-bold text-white">本体に目を配置して削ろう</h3>
                             </div>
                             <p class="text-gray-400 leading-relaxed mb-6">ここでは、一番目立つ「1の目」を例に説明します。</p>
-                            <div class="grid md:grid-cols-2 gap-5">
-                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
-                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-hand-pointer text-event-primary"></i>作業平面を移動</h4>
-                                    <p class="text-gray-400 leading-relaxed"><kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">W</kbd> キーを押し、立方体の上面をクリックします。上面が新しい基準面になります。</p>
-                                </div>
-                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
-                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-circle-plus text-event-primary"></i>目を置く</h4>
-                                    <p class="text-gray-400 leading-relaxed">穴の球体を、立方体の上面の真ん中あたりへ移動させます。</p>
-                                </div>
-                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
-                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-align-center text-event-secondary"></i>中央に整列</h4>
-                                    <p class="text-gray-400 leading-relaxed">立方体と球体を両方選択し、「整列」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">L</kbd> キーを押します。縦横中央の黒い丸をクリックします。</p>
-                                </div>
-                                <div class="bg-white/5 border border-white/10 rounded-xl p-5">
-                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-arrow-down text-event-secondary"></i>少し埋め込む</h4>
-                                    <p class="text-gray-400 leading-relaxed">球体だけを選択し、黒い三角矢印を使って立方体の中に6mmほど沈み込ませます。</p>
-                                </div>
-                                <div class="bg-white/5 border border-white/10 rounded-xl p-5 md:col-span-2">
-                                    <h4 class="font-bold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-object-group text-event-accent"></i>グループ化してくり抜く</h4>
-                                    <p class="text-gray-400 leading-relaxed">立方体と球体を両方選択し、「グループ化」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">G</kbd> を押します。穴が空いて「1の目」の完成です。</p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="timeline-item relative pl-12 group">
-                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-deep border-4 border-event-accent z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                        <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 hover:border-event-accent/50 transition-colors duration-300">
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
-                                <span class="font-en text-3xl font-black text-event-accent/80">04</span>
-                                <h3 class="text-2xl font-bold text-white">他の面も同じように作ろう</h3>
-                            </div>
-                            <p class="text-gray-300 leading-relaxed">1の裏は6、2の裏は5、3の裏は4になるように、別の面へ作業平面を切り替えながら目を配置します。細かい並べ方は、時間をおいて前で説明します。</p>
+                            <ol class="space-y-4 text-gray-300 leading-relaxed list-decimal list-inside">
+                                <li><span class="font-bold text-white">作業平面を移動：</span>サイコロの上面（トップ）をクリックします。これで、立方体の上が新しい基準面になります。</li>
+                                <li><span class="font-bold text-white">目を置く：</span>ステップ2で作った穴の球体を、立方体の上面の真ん中あたりに移動させます。</li>
+                                <li><span class="font-bold text-white">きれいに真ん中に揃える：</span>立方体と球体の両方をマウスでドラッグして選択します。画面右上にある「整列」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">L</kbd> キーを押し、縦と横の中央にある黒い丸（●）をクリックして、目を完全に真ん中へ配置します。</li>
+                                <li><span class="font-bold text-white">くり抜く（グループ化）：</span>立方体と球体を両方選択し、画面右上にある「グループ化」ボタンまたは <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">Ctrl</kbd> + <kbd class="bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-en text-sm">G</kbd> を押します。カチッと穴が空いて「1の目」の完成です。</li>
+                            </ol>
                         </div>
                     </article>
                 </div>
@@ -355,9 +326,10 @@
                             <i class="fa-solid fa-grip"></i>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-3">等間隔に並べる</h3>
-                        <p class="text-gray-400 leading-relaxed">「4」や「5」の目は、Gridのスナップ機能を使うと等間隔に並べやすくなります。</p>
+                        <p class="text-gray-400 leading-relaxed">「4」や「5」の目は、Grid（グリッド）のスナップ機能を使うと等間隔に並べやすくなります。</p>
                     </article>
                 </div>
+                <p class="text-center text-gray-400 leading-relaxed mt-10 fade-in-up">時間をおいて前で説明します。</p>
             </div>
         </section>
     </main>
