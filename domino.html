@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ドミノ：フィニッシュ調整ガイド | Tinkercad Workshop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        en: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        event: {
+                            dark: '#0f172a',
+                            deep: '#0a101d',
+                            card: '#1e293b',
+                            primary: '#0ea5e9',
+                            secondary: '#3b82f6',
+                            accent: '#d946ef',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #a5b4fc 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+        }
+
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: -28px;
+            width: 2px;
+            background: linear-gradient(to bottom, #0ea5e9, #d946ef);
+            z-index: 0;
+        }
+        .timeline-item:last-child .timeline-line::before {
+            display: none;
+        }
+
+        .domino-stage {
+            position: relative;
+            min-height: 360px;
+            border-radius: 24px;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(15,23,42,0.2), rgba(15,23,42,0.95)),
+                linear-gradient(90deg, rgba(14,165,233,0.12) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: auto, 36px 36px, 36px 36px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+        }
+        .domino-floor {
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            bottom: 24%;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #0ea5e9, #3b82f6, #d946ef);
+            box-shadow: 0 0 30px rgba(14,165,233,0.45);
+        }
+        .domino-piece {
+            position: absolute;
+            bottom: calc(24% + 8px);
+            width: 26px;
+            height: 92px;
+            border-radius: 7px;
+            background: linear-gradient(160deg, rgba(255,255,255,0.98), rgba(191,219,254,0.9));
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 18px 28px rgba(0,0,0,0.22), inset -8px -10px 18px rgba(14,165,233,0.16);
+            transform-origin: 50% 100%;
+            animation: domino-fall 4.2s ease-in-out infinite;
+        }
+        .domino-piece:nth-child(2) { left: 17%; animation-delay: 0s; }
+        .domino-piece:nth-child(3) { left: 29%; animation-delay: 0.22s; }
+        .domino-piece:nth-child(4) { left: 41%; animation-delay: 0.44s; }
+        .domino-piece:nth-child(5) { left: 53%; animation-delay: 0.66s; }
+        .domino-piece:nth-child(6) { left: 65%; animation-delay: 0.88s; }
+        .domino-piece:nth-child(7) { left: 77%; animation-delay: 1.1s; }
+        @keyframes domino-fall {
+            0%, 11% { transform: rotate(0deg); }
+            26%, 72% { transform: rotate(68deg); }
+            88%, 100% { transform: rotate(0deg); }
+        }    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-event-secondary selection:text-white">
+    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-event-dark/80 backdrop-blur-md shadow-sm border-b border-white/10 transition-opacity duration-300" id="nav-bg"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex items-center justify-between h-20">
+                <a href="./index.html" class="text-lg sm:text-xl font-bold text-white tracking-wider hover:text-event-primary transition">創造工学科　学科イベント</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#basic" class="text-gray-300 hover:text-white font-medium transition">基本ステップ</a>
+                    <a href="#approach" class="text-gray-300 hover:text-white font-medium transition">修正方法</a>
+                    <a href="#checklist" class="text-gray-300 hover:text-white font-medium transition">チェックリスト</a>
+                </nav>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none p-2" aria-label="メニューを開く">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-event-card absolute w-full left-0 top-20 border-t border-white/10 shadow-2xl">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+                <a href="#basic" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">基本ステップ</a>
+                <a href="#approach" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">修正方法</a>
+                <a href="#checklist" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">チェックリスト</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-event-dark">
+            <div class="absolute inset-0 hero-grid opacity-60"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(14,165,233,0.32),transparent_32%),radial-gradient(circle_at_82%_38%,rgba(217,70,239,0.22),transparent_30%)]"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+                <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+                    <div class="fade-in-up">
+                        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-sm font-bold mb-8">
+                            <span class="w-2 h-2 rounded-full bg-event-primary animate-pulse"></span>
+                            TINKERCAD WORKSHOP
+                        </div>
+                        <p class="font-bold text-event-primary mb-4 tracking-wide">ドミノ：フィニッシュ調整ガイド</p>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
+                            ドミノ：<br>
+                            <span class="text-gradient">フィニッシュ</span><br>
+                            調整ガイド
+                        </h1>
+                        <p class="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl font-medium leading-relaxed">
+                            ドミノの最後でボールが自作の「枠」に正確に収まるように、観察と調整の進め方を確認します。
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#basic" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-lg shadow-event-primary/25 border border-white/10">
+                                <i class="fa-solid fa-play"></i>
+                                調整を始める
+                            </a>
+                            <a href="#checklist" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-full font-bold transition duration-300">
+                                <i class="fa-solid fa-list-check"></i>
+                                最後に確認
+                            </a>
+                        </div>
+                    </div>
+                    <div class="domino-stage fade-in-up" style="transition-delay: 0.2s;" aria-label="ドミノが順番に倒れていくイメージ">
+                        <div class="domino-floor"></div>
+                        <div class="domino-piece"></div>
+                        <div class="domino-piece"></div>
+                        <div class="domino-piece"></div>
+                        <div class="domino-piece"></div>
+                        <div class="domino-piece"></div>
+                        <div class="domino-piece"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="basic" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">BASIC FLOW</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">1. 調整の<span class="text-gradient">基本ステップ</span></h2>
+                    <p class="text-gray-400 leading-relaxed">まずはボールの挙動を観察し、どこに落ちているか確認します。</p>
+                </div>
+
+                <article class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 fade-in-up">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+                        <span class="font-en text-3xl font-black text-event-primary/80">01</span>
+                        <h3 class="text-2xl font-bold text-white">シミュレーションの繰り返し</h3>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">
+                        Tinkercad上で何度か再生し、ボールがどの方向に逸れるか、あるいは勢いが足りない/余りすぎるのかを確認します。
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section id="approach" class="py-24 bg-event-deep relative z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-secondary font-bold text-sm">FIX APPROACH</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">2. 具体的な<span class="text-gradient">修正アプローチ</span></h2>
+                    <p class="text-gray-400 leading-relaxed">問題に合わせて、以下のいずれかの調整を行ってください。</p>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-primary/20 to-event-primary/5 border border-event-primary/20 flex items-center justify-center text-3xl text-event-primary mb-6">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <p class="font-en text-event-primary font-black mb-2">A</p>
+                        <h3 class="text-xl font-bold text-white mb-4">枠を飛び越えてしまう場合</h3>
+                        <p class="text-gray-400 leading-relaxed"><span class="text-white font-bold">ストッパーの設置：</span>枠の奥側に、ボールを留めるための小さな壁（ガード）を追加します。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-secondary/20 to-event-secondary/5 border border-event-secondary/20 flex items-center justify-center text-3xl text-event-secondary mb-6">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                        </div>
+                        <p class="font-en text-event-secondary font-black mb-2">B</p>
+                        <h3 class="text-xl font-bold text-white mb-4">枠の手前で止まってしまう場合</h3>
+                        <p class="text-gray-400 leading-relaxed"><span class="text-white font-bold">位置の変更：</span>枠をボールが落ちる場所に近づけます。</p>
+                    </article>
+
+                    <article class="bg-event-card border border-white/5 rounded-2xl p-8 fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-event-accent/20 to-event-accent/5 border border-event-accent/20 flex items-center justify-center text-3xl text-event-accent mb-6">
+                            <i class="fa-solid fa-road"></i>
+                        </div>
+                        <p class="font-en text-event-accent font-black mb-2">C</p>
+                        <h3 class="text-xl font-bold text-white mb-4">枠の外に逸れてしまう場合</h3>
+                        <p class="text-gray-400 leading-relaxed"><span class="text-white font-bold">ガイドレールの設置：</span>枠までの通路の両脇に、ボールが脱線しないためのレール（壁）を追加します。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="checklist" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">FINAL CHECK</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">3. 仕上げ：<span class="text-gradient">動作チェックリスト</span></h2>
+                    <p class="text-gray-400 leading-relaxed">調整が終わったら、以下の項目をチェックしてください。</p>
+                </div>
+
+                <div class="bg-event-card border border-white/10 rounded-xl p-6 md:p-8 fade-in-up">
+                    <div class="space-y-4 text-gray-300 leading-relaxed">
+                        <label class="group flex cursor-pointer items-start gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-event-primary/50 hover:bg-white/10">
+                            <input type="checkbox" class="mt-1 h-6 w-6 shrink-0 cursor-pointer rounded border-event-primary bg-event-dark text-event-primary focus:ring-event-primary focus:ring-offset-0">
+                            <span class="transition group-has-[:checked]:text-gray-500 group-has-[:checked]:line-through">ボールは脱線せずにゴールエリアへ向かっているか？</span>
+                        </label>
+                        <label class="group flex cursor-pointer items-start gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-event-secondary/50 hover:bg-white/10">
+                            <input type="checkbox" class="mt-1 h-6 w-6 shrink-0 cursor-pointer rounded border-event-secondary bg-event-dark text-event-secondary focus:ring-event-secondary focus:ring-offset-0">
+                            <span class="transition group-has-[:checked]:text-gray-500 group-has-[:checked]:line-through">ボールはゴールエリアの外に出ずに停止しているか？</span>
+                        </label>
+                        <label class="group flex cursor-pointer items-start gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:border-event-accent/50 hover:bg-white/10">
+                            <input type="checkbox" class="mt-1 h-6 w-6 shrink-0 cursor-pointer rounded border-event-accent bg-event-dark text-event-accent focus:ring-event-accent focus:ring-offset-0">
+                            <span class="transition group-has-[:checked]:text-gray-500 group-has-[:checked]:line-through">3回連続で成功するか？（再現性の確認）</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        const navBg = document.getElementById('nav-bg');
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const icon = btn.querySelector('i');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                navBg.classList.replace('bg-event-dark/80', 'bg-event-dark');
+            } else {
+                navBg.classList.replace('bg-event-dark', 'bg-event-dark/80');
+            }
+        });
+
+        function toggleMenu() {
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        }
+
+        btn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>

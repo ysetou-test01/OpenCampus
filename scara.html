@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スカラロボット操作 | 緑のピンを枠内へ移動させる手順</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        en: ['"Montserrat"', 'sans-serif'],
+                    },
+                    colors: {
+                        event: {
+                            dark: '#0f172a',
+                            deep: '#0a101d',
+                            card: '#1e293b',
+                            primary: '#0ea5e9',
+                            secondary: '#3b82f6',
+                            accent: '#d946ef',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; background: #0f172a; color: #f8fafc; }
+        .text-gradient {
+            background: linear-gradient(135deg, #a5b4fc 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, black 0%, transparent 92%);
+        }
+        .visual-frame {
+            position: relative;
+            border-radius: 26px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(14,165,233,0.9), rgba(217,70,239,0.78));
+            box-shadow: 0 24px 80px rgba(0,0,0,0.38), 0 0 46px rgba(14,165,233,0.18);
+        }
+        .visual-frame::before {
+            content: '';
+            position: absolute;
+            inset: -18px;
+            border-radius: 34px;
+            background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(217,70,239,0.16));
+            filter: blur(24px);
+            z-index: -1;
+        }
+        .robot-stage {
+            position: relative;
+            min-height: 380px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: url('./sample01.jpg') center/cover no-repeat;
+        }
+        .robot-stage::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15,23,42,0.02), rgba(15,23,42,0.42));
+            pointer-events: none;
+        }
+        .image-chip {
+            position: absolute;
+            left: 18px;
+            bottom: 18px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.76);
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            color: #f8fafc;
+            font-weight: 700;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.28);
+        }
+        .info-tile {
+            background: linear-gradient(135deg, rgba(30,41,59,0.95), rgba(15,23,42,0.92));
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 16px 44px rgba(0,0,0,0.22);
+        }
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 9.5rem;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(59,130,246,0.14));
+            border: 1px solid rgba(14,165,233,0.28);
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-event-secondary selection:text-white">
+    <header class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="absolute inset-0 bg-event-dark/80 backdrop-blur-md shadow-sm border-b border-white/10 transition-opacity duration-300" id="nav-bg"></div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex items-center justify-between h-20">
+                <a href="./index.html" class="text-lg sm:text-xl font-bold text-white tracking-wider hover:text-event-primary transition">創造工学科　学科イベント</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="text-gray-300 hover:text-white font-medium transition">概要</a>
+                    <a href="#about" class="text-gray-300 hover:text-white font-medium transition">事前準備</a>
+                    <a href="#steps" class="text-gray-300 hover:text-white font-medium transition">移動プロセス</a>
+                    <a href="#tips" class="text-gray-300 hover:text-white font-medium transition">ヒント</a>
+                </nav>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none p-2" aria-label="メニューを開く">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-event-card absolute w-full left-0 top-20 border-t border-white/10 shadow-2xl">
+            <div class="px-4 pt-2 pb-6 space-y-2 flex flex-col">
+                <a href="#overview" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">概要</a>
+                <a href="#about" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">事前準備</a>
+                <a href="#steps" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">移動プロセス</a>
+                <a href="#tips" class="mobile-link block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-md">ヒント</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-event-dark">
+            <div class="absolute inset-0 hero-grid opacity-60"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(14,165,233,0.32),transparent_32%),radial-gradient(circle_at_82%_38%,rgba(217,70,239,0.22),transparent_30%)]"></div>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+                <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center">
+                    <div class="fade-in-up">
+                        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-full text-sm font-bold mb-8">
+                            <span class="w-2 h-2 rounded-full bg-event-primary animate-pulse"></span>
+                            SIM LAB WORKSHOP
+                        </div>
+                        <p class="font-bold text-event-primary mb-4 tracking-wide">スカラロボット操作</p>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 tracking-tight">
+                            スカラロボット操作<br>
+                            <span class="text-gradient">緑のピンを枠内へ</span><br>
+                            移動させる手順
+                        </h1>
+                        <p class="text-lg md:text-2xl text-gray-300 mb-10 max-w-2xl font-medium leading-relaxed">
+                            スカラロボットを使用して、緑のピンを正確に指定のゴール枠内へ配置するためのステップを解説します。
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#steps" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-4 px-8 rounded-full transition-all duration-300 shadow-lg shadow-event-primary/25 border border-white/10">
+                                <i class="fa-solid fa-gamepad"></i>
+                                手順を確認
+                            </a>
+                            <a href="./domino.html" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-full font-bold transition duration-300">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                ドミノへ
+                            </a>
+                        </div>
+                    </div>
+                    <div class="visual-frame fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="robot-stage" aria-label="スカラロボットの参考画像">
+                            <div class="image-chip"><i class="fa-solid fa-image text-event-primary"></i> 参考モデル</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">OVERVIEW</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">0. <span class="text-gradient">スカラロボット</span>とは</h2>
+                    <p class="text-gray-400 leading-relaxed">スカラロボットは、水平面内を素早く動き、決められた位置へ正確に部品を運ぶことができるロボットです。</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <article class="info-tile rounded-xl p-6 md:p-8 fade-in-up">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-primary/20 to-event-primary/5 border border-event-primary/20 flex items-center justify-center text-2xl text-event-primary mb-6">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">水平方向の動きが得意</h3>
+                        <p class="text-gray-400 leading-relaxed">アームを回転させながら、平面上の任意の位置へ移動できます。</p>
+                    </article>
+                    <article class="info-tile rounded-xl p-6 md:p-8 fade-in-up" style="transition-delay: 0.1s;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-secondary/20 to-event-secondary/5 border border-event-secondary/20 flex items-center justify-center text-2xl text-event-secondary mb-6">
+                            <i class="fa-solid fa-up-down"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">上下方向にも動かせる</h3>
+                        <p class="text-gray-400 leading-relaxed">先端部分を上下させることで、部品をつかむ・置く・押すなどの動作ができます。</p>
+                    </article>
+                    <article class="info-tile rounded-xl p-6 md:p-8 fade-in-up" style="transition-delay: 0.2s;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-event-accent/20 to-event-accent/5 border border-event-accent/20 flex items-center justify-center text-2xl text-event-accent mb-6">
+                            <i class="fa-solid fa-industry"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">産業現場で多く使われる</h3>
+                        <p class="text-gray-400 leading-relaxed">小型部品の組立、搬送、検査、仕分けなど、正確さと速さが必要な作業に適しています。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <section id="about" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">PREPARATION</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">1. 事前準備：<span class="text-gradient">ロボットの可動範囲</span>を確認</h2>
+                    <p class="text-gray-400 leading-relaxed">緑のピンを移動する前に、ロボットがどの範囲まで動けるかを確認します。</p>
+                </div>
+                <div class="info-tile rounded-xl p-6 md:p-8 fade-in-up">
+                    <ol class="space-y-5 text-gray-300 leading-relaxed list-decimal list-inside">
+                        <li><span class="font-bold text-white">各軸の動作確認：</span>「1st Arm」「2nd Arm」「Hand」を個別に動かし、可動域を確認してください。</li>
+                        <li><span class="font-bold text-white">中心点の把握：</span>ロボットの旋回中心から、現在の緑のピンの位置までと、ゴール枠までの距離を把握します。</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        <section id="steps" class="py-24 bg-event-deep relative z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-secondary font-bold text-sm">WORKFLOW</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">2. 移動プロセス<span class="text-gradient">（基本ステップ）</span></h2>
+                    <p class="text-gray-400 leading-relaxed">ピンを枠に移動させる際は、以下の順序で操作を行うとスムーズです。</p>
+                </div>
+                <div class="info-tile rounded-xl overflow-hidden fade-in-up">
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[760px] text-left text-gray-300">
+                            <thead class="bg-gradient-to-r from-event-primary/25 to-event-accent/20 text-white">
+                                <tr>
+                                    <th class="w-56 px-5 py-4 font-bold whitespace-nowrap">ステップ</th>
+                                    <th class="px-5 py-4 font-bold">操作内容</th>
+                                    <th class="px-5 py-4 font-bold">ポイント</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/10">
+                                <tr class="align-top hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-5 py-5 font-bold text-white whitespace-nowrap"><span class="step-badge">1. アプローチ</span></td>
+                                    <td class="px-5 py-5 leading-relaxed">1st Armと2nd Armを動かし、ハンド（先端）をピンの真上へ移動させる。</td>
+                                    <td class="px-5 py-5 leading-relaxed">枠の方向を見失わないよう、現在の位置を記憶しておく。</td>
+                                </tr>
+                                <tr class="align-top hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-5 py-5 font-bold text-white whitespace-nowrap"><span class="step-badge">2. 把持（掴む）</span></td>
+                                    <td class="px-5 py-5 leading-relaxed">ピンの位置までアームを下ろし、ピンを掴む（または保持する）。</td>
+                                    <td class="px-5 py-5 leading-relaxed">高さを慎重に調整し、ピンが倒れないようにする。</td>
+                                </tr>
+                                <tr class="align-top hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-5 py-5 font-bold text-white whitespace-nowrap"><span class="step-badge">3. リフトアップ</span></td>
+                                    <td class="px-5 py-5 leading-relaxed">障害物を避けるため、アームを安全な高さまで引き上げる。</td>
+                                    <td class="px-5 py-5 leading-relaxed">高くしすぎると後の位置合わせが難しくなるため、最低限の高さにする。</td>
+                                </tr>
+                                <tr class="align-top hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-5 py-5 font-bold text-white whitespace-nowrap"><span class="step-badge">4. ゴールへ旋回</span></td>
+                                    <td class="px-5 py-5 leading-relaxed">1st Armと2nd Armを調整し、ハンドをゴール枠の真上へ移動させる。</td>
+                                    <td class="px-5 py-5 leading-relaxed">真上からアームを見ることで、しっかり枠に入っていることを確認する。</td>
+                                </tr>
+                                <tr class="align-top hover:bg-white/[0.03] transition-colors">
+                                    <td class="px-5 py-5 font-bold text-white whitespace-nowrap"><span class="step-badge">5. 配置</span></td>
+                                    <td class="px-5 py-5 leading-relaxed">ゆっくりとアームを下げ、ゴール枠内でピンを離す。</td>
+                                    <td class="px-5 py-5 leading-relaxed">枠の端にぶつからないよう、中心から垂直に降ろす。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="tips" class="py-24 bg-event-dark relative z-10 border-t border-white/5">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+                <div class="text-center mb-14 fade-in-up">
+                    <span class="font-en tracking-[0.2em] text-event-primary font-bold text-sm">TIPS</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">3. 精度を上げるための<span class="text-gradient">ヒント</span></h2>
+                </div>
+                <div class="info-tile rounded-xl p-6 md:p-8 fade-in-up">
+                    <ul class="space-y-4 text-gray-300 leading-relaxed list-disc list-inside">
+                        <li><span class="font-bold text-white">微調整：</span>1回で成功しない場合は、「2nd Arm（前腕）」の動きを先に調整し、最後に「1st Arm（上腕）」で微調整を行うと、位置が合いやすくなります。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in-up').forEach(element => observer.observe(element));
+
+        const navBg = document.getElementById('nav-bg');
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        const icon = btn.querySelector('i');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) navBg.classList.replace('bg-event-dark/80', 'bg-event-dark');
+            else navBg.classList.replace('bg-event-dark', 'bg-event-dark/80');
+        });
+
+        function toggleMenu() {
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        }
+        btn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+</body>
+</html>
