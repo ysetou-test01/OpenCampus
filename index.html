@@ -98,22 +98,9 @@
             // 0. ブラウザのタブに表示されるタイトル
             pageTitle: "創造工学科",
 
-            // オープンキャンパス練習用
-            tinkercadUrl: "https://www.tinkercad.com/joinclass/CQ7DWX7HW",
-
-            // 0718午前
-            //tinkercadUrl: "https://www.tinkercad.com/co-teacher/join/MDIR9FEH2",
-
-            // 0718午後
-            //tinkercadUrl: "https://www.tinkercad.com/co-teacher/join/MTAYIZ5CN",
-
-            // 0719午前
-            //tinkercadUrl: "https://www.tinkercad.com/co-teacher/join/KWFG9TZ3C",
-
-            // 0719午後
-            //tinkercadUrl: "https://www.tinkercad.com/co-teacher/join/CBZJM3GS7",
-
-
+            // 1. TinkerCADの起動URL
+            tinkercadUrl: "https://www.tinkercad.com/",
+            
             // 2. 一番上のメイン画像（ヒーロー背景）のURL
             // （プレースホルダー画像内の文字を改行する場合は %0A を入れます）
             heroBackgroundImage: "https://placehold.co/1920x1080/1e293b/0ea5e9?text=Creative%0ATechnology%0AEngineering",
@@ -299,17 +286,32 @@
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <!-- 所要時間バッジ -->
-                    <div class="inline-flex items-center justify-center gap-3 bg-event-card border border-white/10 rounded-full px-6 py-2.5 shadow-lg">
+                    <div class="relative inline-flex items-center justify-center gap-3 bg-event-card border border-white/10 rounded-full px-6 py-2.5 shadow-lg">
                         <div class="relative flex h-3 w-3">
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-event-primary opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-3 w-3 bg-event-primary"></span>
                         </div>
                         <span class="text-gray-300 font-medium tracking-wide text-sm">所要時間</span>
-                        <span class="font-en font-black text-xl text-transparent bg-clip-text bg-gradient-to-r from-event-primary to-event-secondary">40 MIN</span>
+                        
+                        <!-- 変更前 (手書き風二重線で消す) -->
+                        <div class="relative inline-block mr-2">
+                            <span class="font-en font-bold text-lg text-gray-500">40 MIN</span>
+                            <!-- 手書き風の取り消し線（1本） -->
+                            <svg class="absolute w-[120%] h-[120%] -left-[10%] -top-[10%] text-red-500 opacity-90 pointer-events-none" viewBox="0 0 100 30" preserveAspectRatio="none">
+                                <path d="M 0,16 Q 50,12 100,18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" />
+                            </svg>
+                        </div>
+
+                        <!-- 変更後 (別ブロックで追加された付箋風シール) -->
+                        <div class="absolute -bottom-8 right-2 md:right-6 transform rotate-6 bg-yellow-400 text-gray-900 px-3 py-0.5 rounded-sm shadow-[0_4px_10px_rgba(0,0,0,0.3)] border border-yellow-500 z-20 hover:scale-110 hover:rotate-0 transition-transform duration-300">
+                            <!-- セロハンテープ風の装飾 -->
+                            <div class="absolute -top-1.5 left-1/2 -translate-x-1/2 w-6 h-2.5 bg-white/60 backdrop-blur-sm shadow-sm transform -rotate-3 border border-white/20"></div>
+                            <span class="font-en font-black text-lg">35 MIN</span>
+                        </div>
                     </div>
 
                     <!-- TinkerCAD起動ボタン -->
-                    <a id="tinkercad-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-2.5 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-event-primary/25 border border-white/10">
+                    <a id="tinkercad-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gradient-to-r from-event-primary to-event-secondary hover:from-event-secondary hover:to-event-primary text-white font-bold py-2.5 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-event-primary/25 border border-white/10 mt-2 sm:mt-0">
                         <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
                         TinkerCADを起動する
                     </a>
@@ -353,13 +355,7 @@
                             </div>
                             <h4 class="text-xl font-bold text-white">みんなで基本操作の練習</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed mb-5">Web上でかんたんに3Dデザインができる「Tinkercad」を使って、オリジナルのサイコロを作ります。完成イメージと基本ルールを確認しながら、本体作成、目の配置、グループ化でのくり抜きまで、先輩のお手本に合わせて進めます。</p>
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <a href="./dice.html" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 px-5 py-2.5 rounded-full font-bold transition duration-300">
-                                <i class="fa-solid fa-up-right-from-square text-sm"></i>
-                                サイコロ
-                            </a>
-                        </div>
+                        <p class="text-gray-400 leading-relaxed">実際にパソコンをさわってみよう！先輩のお手本を見ながら、四角や丸などの図形を出したり、重ねたり、大きさを変えたりする練習をするよ。まるでデジタルな積み木遊びみたい！</p>
                     </div>
                 </div>
 
@@ -379,36 +375,40 @@
                             </div>
                             <h4 class="text-xl font-bold text-white">物理演算「Sim Lab」を体験しよう</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed mb-5">TinkerCADの楽しい機能「Sim Lab（シムラボ）」に挑戦！「ドミノ」と「スカラロボット」の2つを使って、動きの変化やキーボード操作によるクレーンゲームを体験してみよう！</p>
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <a href="./domino.html" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 px-5 py-2.5 rounded-full font-bold transition duration-300">
-                                <i class="fa-solid fa-up-right-from-square text-sm"></i>
-                                ドミノ
-                            </a>
-                            <a href="./scara.html" class="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white hover:bg-white/20 px-5 py-2.5 rounded-full font-bold transition duration-300">
-                                <i class="fa-solid fa-up-right-from-square text-sm"></i>
-                                スカラロボット
-                            </a>
-                        </div>
+                        <p class="text-gray-400 leading-relaxed">TinkerCADの楽しい機能「Sim Lab（シムラボ）」に挑戦！自分が作った3Dの図形が重力で落ちたり、ぶつかって倒れたりする様子をシミュレーションしてみよう。さらに、事前に用意した「スカラーロボット」の3Dモデルを使い、キーボード操作でクレーンゲームのように遊ぶ体験もできるよ！まるでゲームみたいに、画面の中でモデルが動き出すよ！</p>
                     </div>
                 </div>
 
-                <!-- Item 4: 5min -->
-                <div class="timeline-item relative pl-12 group">
-                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-gray-500 z-10 group-hover:scale-125 transition-transform duration-300 group-hover:border-gray-400"></div>
-                    <div class="bg-event-card border border-white/10 rounded-xl p-6 hover:border-gray-500/50 transition-colors duration-300">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                <!-- Item 4: 5min (時間都合により省略) -->
+                <div class="timeline-item relative pl-12 group opacity-80 grayscale">
+                    <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-event-dark border-4 border-gray-600 z-10"></div>
+                    
+                    <div class="relative bg-event-card/50 border border-white/5 rounded-xl p-6 overflow-hidden">
+                        
+                        <!-- 全体を覆うバツ印とスタンプ（画像風） -->
+                        <div class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                            <svg class="absolute w-full h-full text-red-500/40" preserveAspectRatio="none" viewBox="0 0 100 100">
+                                <line x1="5" y1="95" x2="95" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                <line x1="5" y1="5" x2="95" y2="95" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                            <div class="bg-event-dark/90 px-5 py-2 border-2 border-red-500 rounded transform -rotate-12 backdrop-blur-md shadow-xl">
+                                <span class="font-bold text-red-500 tracking-wider text-lg">時間都合により省略（スキップ）🙇‍♂️</span>
+                            </div>
+                        </div>
+
+                        <!-- 既存のコンテンツ（グレーアウト気味にする） -->
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4 opacity-50">
                             <div class="flex items-center">
-                                <span class="font-en text-3xl font-black text-gray-400/80 mr-3">04</span>
-                                <div class="h-6 w-px bg-white/20 mr-3 hidden sm:block"></div>
-                                <div class="inline-flex items-center gap-1.5 bg-gray-500/10 border border-gray-500/30 px-3 py-1 rounded">
-                                    <i class="fa-solid fa-stopwatch text-gray-400 text-sm"></i>
-                                    <span class="font-en font-bold text-gray-400 text-sm tracking-wider">5 MIN</span>
+                                <span class="font-en text-3xl font-black text-gray-500 mr-3">04</span>
+                                <div class="h-6 w-px bg-white/10 mr-3 hidden sm:block"></div>
+                                <div class="inline-flex items-center gap-1.5 bg-gray-600/10 border border-gray-600/30 px-3 py-1 rounded">
+                                    <i class="fa-solid fa-stopwatch text-gray-500 text-sm"></i>
+                                    <span class="font-en font-bold text-gray-500 text-sm tracking-wider">5 MIN</span>
                                 </div>
                             </div>
-                            <h4 class="text-xl font-bold text-white">3Dプリンタで出力するには＆おわりに</h4>
+                            <h4 class="text-xl font-bold text-gray-400">3Dプリンタで出力するには＆おわりに</h4>
                         </div>
-                        <p class="text-gray-400 leading-relaxed">作ったデータがどうやって3Dプリントするのか、3Dプリンターで使用するファイルに変換してみよう！最後に、弓削商船での学校生活や寮生活について、先輩になんでも質問してみてね！</p>
+                        <p class="text-gray-500 leading-relaxed opacity-50">作ったデータがどうやって3Dプリントするのか、3Dプリンターで使用するファイルに変換してみよう！最後に、弓削商船での学校生活や寮生活について、先輩になんでも質問してみてね！</p>
                     </div>
                 </div>
             </div>
