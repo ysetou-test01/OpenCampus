@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3Dモデリング ワークショップ</title>
+  <title>創造工学科・情報工学科</title>
 
   <style>
     * {
@@ -33,24 +33,22 @@
       background: #fff;
       border-radius: 20px;
       padding: 48px 32px;
-      text-align: center;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     }
 
     h1 {
-      margin: 0 0 12px;
+      margin: 0 0 24px;
       font-size: 2rem;
+      text-align: center;
     }
 
-    .description {
-      margin-bottom: 40px;
-      color: #666;
-      line-height: 1.8;
+    .section + .section {
+      margin-top: 48px;
     }
 
     .links {
       display: grid;
-      gap: 20px;
+      gap: 16px;
     }
 
     .button {
@@ -60,6 +58,7 @@
       text-decoration: none;
       font-size: 1.2rem;
       font-weight: bold;
+      text-align: center;
       transition: 0.2s;
     }
 
@@ -77,6 +76,16 @@
       color: #fff;
     }
 
+    .teachable {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .stretch {
+      background: #6c63ff;
+      color: #fff;
+    }
+
     .sub {
       display: block;
       margin-top: 6px;
@@ -90,39 +99,65 @@
 <body>
 
   <main class="container">
-    <section class="card">
+    <div class="card">
 
-      <h1>3Dモデリング ワークショップ</h1>
+      <section class="section">
+        <h1>創造工学科</h1>
 
-      <p class="description">
-        使用するページを選択してください。
-      </p>
+        <div class="links">
 
-      <div class="links">
+          <a
+            class="button pythonscad"
+            href="https://ysetou-hp.github.io/homepage/PythonSCAD-Workshop/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            PythonSCAD Workshop
+            <span class="sub">PythonSCADの教材を開く</span>
+          </a>
 
-        <a
-          class="button pythonscad"
-          href="https://ysetou-hp.github.io/homepage/PythonSCAD-Workshop/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          PythonSCAD Workshop
-          <span class="sub">PythonSCADの教材を開く</span>
-        </a>
+          <a
+            class="button tinkercad"
+            href="https://www.tinkercad.com/joinclass/JWYPNAZ2B"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tinkercad
+            <span class="sub">クラスに参加する</span>
+          </a>
 
-        <a
-          class="button tinkercad"
-          href="https://www.tinkercad.com/joinclass/JWYPNAZ2B"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Tinkercad
-          <span class="sub">クラスに参加する</span>
-        </a>
+        </div>
+      </section>
 
-      </div>
+      <section class="section">
+        <h1>情報工学科</h1>
 
-    </section>
+        <div class="links">
+
+          <a
+            class="button teachable"
+            href="https://teachablemachine.withgoogle.com/train"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Teachable Machine
+            <span class="sub">AIモデルを作成する</span>
+          </a>
+
+          <a
+            class="button stretch"
+            href="https://stretch3.champierre.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Stretch3
+            <span class="sub">Stretch3を開く</span>
+          </a>
+
+        </div>
+      </section>
+
+    </div>
   </main>
 
 </body>
