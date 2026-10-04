@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>創造工学科・情報工学科</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "Hiragino Kaku Gothic ProN", "Hiragino Sans",
+                   "Yu Gothic", sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 700px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .section + .section {
+      margin-top: 48px;
+    }
+
+    .links {
+      display: grid;
+      gap: 16px;
+    }
+
+    .button {
+      display: block;
+      padding: 22px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .pythonscad {
+      background: #3776ab;
+      color: #fff;
+    }
+
+    .tinkercad {
+      background: #1477d4;
+      color: #fff;
+    }
+
+    .teachable {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    .stretch {
+      background: #6c63ff;
+      color: #fff;
+    }
+
+    .sub {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      font-weight: normal;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+    <div class="card">
+
+      <section class="section">
+        <h1>創造工学科</h1>
+
+        <div class="links">
+
+          <a
+            class="button pythonscad"
+            href="https://ysetou-hp.github.io/homepage/PythonSCAD-Workshop/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            PythonSCAD Workshop
+            <span class="sub">PythonSCADの教材を開く</span>
+          </a>
+
+          <a
+            class="button tinkercad"
+            href="https://www.tinkercad.com/joinclass/JWYPNAZ2B"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Tinkercad
+            <span class="sub">クラスに参加する</span>
+          </a>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h1>情報工学科</h1>
+
+        <div class="links">
+
+          <a
+            class="button teachable"
+            href="https://teachablemachine.withgoogle.com/train"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Teachable Machine
+            <span class="sub">AIモデルを作成する</span>
+          </a>
+
+          <a
+            class="button stretch"
+            href="https://stretch3.champierre.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Stretch3
+            <span class="sub">Stretch3を開く</span>
+          </a>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</body>
+</html>
