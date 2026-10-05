@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>電子棟 | キャンパス 3Dビューア</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="viewer.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="viewer-page">
+  <header class="viewer-header">
+    <div>
+      <a class="back-link" href="index.html">← モデル一覧</a>
+      <h1><span class="text-gradient">電子棟</span> <span class="viewer-subtitle">3Dビューア</span></h1>
+    </div>
+    <div class="toolbar" aria-label="表示操作">
+      <button id="reset-view" type="button" disabled>視点をリセット</button>
+      <button id="auto-rotate" type="button" aria-pressed="false" disabled>自動回転</button>
+    </div>
+  </header>
+  <main id="viewer" data-model="./models/denshito.glb" aria-label="電子棟の3Dモデル">
+    <div id="status" class="status" role="status" aria-live="polite">電子棟を読み込んでいます…</div>
+  </main>
+  <footer class="viewer-help">ドラッグ：回転 ／ ホイール・ピンチ：拡大縮小 ／ 右ドラッグ・2本指：移動</footer>
+  <noscript><p class="status">3D表示には JavaScript を有効にしてください。</p></noscript>
+  <script type="module">
+    const status = document.querySelector('#status');
+    if (location.protocol === 'file:') {
+      status.dataset.state = 'error';
+      status.textContent = 'ローカルサーバーから開いてください。OpenCampus フォルダで「python -m http.server 8000」を実行し、http://localhost:8000/3d/denshito.html を開きます。';
+    } else {
+      import('./viewer.js').then(({ startViewer }) => startViewer()).catch((error) => {
+        console.error(error);
+        status.hidden = false;
+        status.dataset.state = 'error';
+        status.textContent = '3Dビューアを起動できませんでした。インターネット接続と、ブラウザの WebGL 対応を確認してください。';
+      });
+    }
+  </script>
+</body>
+</html>
